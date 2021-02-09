@@ -299,11 +299,14 @@ def reduce_pmcc(x):
         x = 0
     return x
 df_3['pmcc1'] = df_3['pmcc'].apply(lambda x: reduce_pmcc(x))
-jg_1 = pd.qcut(data['jg'], q=3, labels=['low', 'medium', 'high'])
-xl_1 = pd.qcut(data['xl'], q=3, labels=['low', 'medium', 'high'])
+jg_1 = pd.qcut(data['jg'], q=6, labels=['1', '2', '3','4','5','6'])
+xl_1 = pd.qcut(data['xl'], q=6, labels=['1', '2', '3','4','5','6'])
+data['jg1'] = jg_1
+data['xl1'] = xl_1
+data['xl3'] = data['xl1'].astype('int')
+data['jg3'] = data['jg1'].astype('int')
 
-
-
+data.dtypes
 
 
 
