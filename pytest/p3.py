@@ -30,17 +30,24 @@ wt4 = wt4_2015.head(100)
 a = diag_2015.groupby('B_WT4_V1_ID')['DIAGNOSE_CODE'].agg({'diags': lambda x:list(x)})
 b = surg_2015.groupby('B_WT4_V1_ID')['OPERATION_CODE'].agg({'opers': lambda x:list(x)})
 wt4_2015.index = wt4_2015['B_WT4_V1_ID']
-w1 = wt4_2015.join(a)
-w1 = w1.join(b)
+wt4_2015 = wt4_2015.join(a)
+wt4_2015 = wt4_2015.join(b)
 
 # =============================================================================
 # 使用规则表，开始分组逻辑判断，最终得到drg、adrg、mdc分组结果
 # =============================================================================
-w = w1.head(1)
+w1 = wt4_2015.head(10)
 
-def reduce_1(x):
-    return x.index
+drgs = []
+for w in w1.iterrows():
+    mdc = 'MDCA'
+    adrg = 'AA1'
+    drg = 'AA19'
+    drgs.append((w[1]['B_WT4_V1_ID'], mdc, adrg, drg))
 
-w['mdc'] = w.apply(lambda x: reduce_1(x))
-print(w['mdc'])
-
+# =============================================================================
+# 将tuple数组转换为dataframe，再与wt4合并，供下面的DRG分析使用
+# =============================================================================
+d1 = pd.Series(drgs)
+d2 = pd.DataFrame(columns=('B_WT4_V1_ID', 'MDC', 'ADRG', 'DRG'))
+d2[['B_WT4_V1_ID', 'MDC', 'ADRG', 'DRG']] = d1.apply(pd.Series)
