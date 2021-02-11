@@ -40,9 +40,25 @@ w1 = wt4_2015.head(10)
 
 drgs = []
 for w in w1.iterrows():
-    mdc = 'MDCA'
-    adrg = 'AA1'
-    drg = 'AA19'
+    mdc = ''
+    adrg = ''
+    drg = ''
+    
+    diag_main = w[1]['DISEASE_CODE1']
+    
+    rule_icd10 = icd10_2015.loc[icd10_2015['CODE']==diag_main]
+    
+    adrg_diag = rule_icd10['adrg']
+        
+    adrg = list(adrg_diag)[0][0]
+    
+    mdc = adrg[0]
+    
+    rule_adrg = adrg_2015.loc[adrg_2015['ADRG_CODE']==adrg]
+    drgs_1 = rule_adrg['drgs_1']
+    
+#    drg = adrg + drgs_1[0]
+
     drgs.append((w[1]['B_WT4_V1_ID'], mdc, adrg, drg))
 
 # =============================================================================
